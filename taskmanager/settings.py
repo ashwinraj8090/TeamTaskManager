@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'accounts',
     'projects',
@@ -118,11 +119,26 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+    BASE_DIR / 'templates' / 'static',
+]
+
+# WhiteNoise configuration
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 if not DEBUG:
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     WHITENOISE_MANIFEST_STRICT = False
+    WHITENOISE_USE_FINDERS = True  # Added to ensure it finds files in STATICFILES_DIRS during runtime if needed
 
 
 AUTH_USER_MODEL = 'accounts.User'
@@ -130,10 +146,7 @@ AUTH_USER_MODEL = 'accounts.User'
 LOGIN_URL = 'account_login'
 LOGIN_REDIRECT_URL = '/dashboard/'
 
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-    BASE_DIR / 'templates' / 'static',
-]
+
 
 AUTHENTICATION_BACKENDS = [
     'axes.backends.AxesStandaloneBackend',
