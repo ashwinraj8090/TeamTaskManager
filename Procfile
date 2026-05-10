@@ -1,1 +1,1 @@
-web: gunicorn taskmanager.wsgi
+web: python manage.py collectstatic --noinput && gunicorn taskmanager.wsgi

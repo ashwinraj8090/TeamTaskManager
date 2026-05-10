@@ -118,7 +118,7 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
@@ -131,12 +131,17 @@ STORAGES = {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.StaticFilesStorage",
     },
 }
 
+WHITENOISE_USE_FINDERS = True  # Fallback to finding files in STATICFILES_DIRS
+WHITENOISE_MANIFEST_STRICT = False
+
 if not DEBUG:
-    WHITENOISE_MANIFEST_STRICT = False
+    WHITENOISE_AUTOREFRESH = False
+else:
+    WHITENOISE_AUTOREFRESH = True
 
 
 AUTH_USER_MODEL = 'accounts.User'
