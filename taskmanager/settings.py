@@ -35,7 +35,6 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'accounts',
     'projects',
@@ -132,13 +131,12 @@ STORAGES = {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
 
 if not DEBUG:
     WHITENOISE_MANIFEST_STRICT = False
-    WHITENOISE_USE_FINDERS = True  # Added to ensure it finds files in STATICFILES_DIRS during runtime if needed
 
 
 AUTH_USER_MODEL = 'accounts.User'
