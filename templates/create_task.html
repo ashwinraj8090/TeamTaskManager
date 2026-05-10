@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-7 col-lg-6">
+
+        <div class="glass-card fade-up">
+
+            <div class="mb-4">
+                <a href="/tasks/"
+                   style="color:var(--text-muted);text-decoration:none;font-size:0.875rem;transition:0.2s;"
+                   onmouseover="this.style.color='#a5b4fc'" onmouseout="this.style.color='var(--text-muted)'">
+                    ← Back to Tasks
+                </a>
+            </div>
+
+            <h1 class="page-title" style="font-size:2rem;">
+                ✅ Create Task
+            </h1>
+            <p style="color:var(--text-muted);font-size:0.875rem;margin-bottom:2rem;">
+                Assign a task to a project and track its progress.
+            </p>
+
+            <form method="POST" id="create-task-form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="btn btn-primary w-100 py-3 mt-3" type="submit" id="create-task-submit"
+                        style="font-size:1rem;">
+                    Create Task →
+                </button>
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const projectSelect = document.getElementById('id_project');
+        const assigneeSelect = document.getElementById('id_assignee');
+
+        function updateAssignees() {
+            const projectId = projectSelect.value;
+            if (!projectId) {
+                assigneeSelect.innerHTML = '<option value="">---------</option>';
+                return;
+            }
+
+            fetch(`/tasks/api/members/?project_id=${projectId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const currentAssignee = assigneeSelect.value;
+                    assigneeSelect.innerHTML = '<option value="">---------</option>';
+                    data.members.forEach(member => {
+                        const option = document.createElement('option');
+                        option.value = member.id;
+                        option.textContent = member.username;
+                        if (member.id == currentAssignee) {
+                            option.selected = true;
+                        }
+                        assigneeSelect.appendChild(option);
+                    });
+                });
+        }
+
+        projectSelect.addEventListener('change', updateAssignees);
+        
+        // Initial load if project is already selected
+        if (projectSelect.value) {
+            updateAssignees();
+        }
+    });
+</script>
+{% endblock %}

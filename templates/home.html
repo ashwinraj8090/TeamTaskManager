@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="hero-section fade-up">
+    <span class="hero-logo-icon">⬡</span>
+    <h1 class="hero-title">Manage Work.<br>Ship Faster.</h1>
+    <p class="hero-sub">
+        A sleek, focused workspace for your team — track projects, assign tasks,
+        and hit every deadline with clarity.
+    </p>
+    <div class="hero-cta-group">
+        <a href="/dashboard/" class="btn-hero-primary" id="home-goto-dashboard">
+            📊 Go to Dashboard &nbsp;→
+        </a>
+        <a href="/projects/" class="btn-hero-secondary" id="home-goto-projects">
+            📁 My Projects
+        </a>
+    </div>
+</div>
+
+<div class="features-section fade-up" style="animation-delay: 0.15s;">
+    <div class="container">
+        <div class="row g-4 justify-content-center">
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card">
+                    <span class="feature-icon">🛡️</span>
+                    <h3>Role-Based Access</h3>
+                    <p>Granular control over who can view, edit, and manage projects and tasks.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card">
+                    <span class="feature-icon">🤝</span>
+                    <h3>Team Collaboration</h3>
+                    <p>Work together seamlessly. Invite members and assign tasks instantly.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card">
+                    <span class="feature-icon">✅</span>
+                    <h3>Task Tracking</h3>
+                    <p>Keep everyone aligned with clear priorities, statuses, and due dates.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card">
+                    <span class="feature-icon">📈</span>
+                    <h3>Progress Monitoring</h3>
+                    <p>Get a bird's-eye view of your team's workflow and project health.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="section-header fade-up">
+    <div>
+        <h1 class="page-title mb-1">My Projects</h1>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin:0;">
+            {{ active_project_data|length|add:completed_project_data|length }} projects in your workspace
+        </p>
+    </div>
+    <a href="/projects/create/" class="btn btn-primary px-4 py-2" id="projects-new-btn">
+        ＋ New Project
+    </a>
+</div>
+
+<!-- Search Bar -->
+<div class="mb-4 fade-up">
+    <form method="GET" action="." class="position-relative">
+        <input type="text" name="q" value="{{ query|default:'' }}" 
+               placeholder="Search projects by title or description..." 
+               class="form-control py-3 ps-4" 
+               style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 14px; color: white; padding-right: 3rem;">
+        <button type="submit" class="btn btn-link position-absolute end-0 top-50 translate-middle-y me-3 text-muted" style="text-decoration:none;">
+            🔍
+        </button>
+    </form>
+</div>
+
+<!-- Tabs Navigation -->
+<ul class="nav nav-tabs border-0 mb-4 fade-up" id="projectTabs" role="tablist" style="gap: 10px;">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active custom-tab" id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button" role="tab">
+            Active <span class="badge rounded-pill ms-2" style="background: rgba(99, 102, 241, 0.2); color: var(--accent-1);">{{ active_project_data|length }}</span>
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link custom-tab" id="completed-tab" data-bs-toggle="tab" data-bs-target="#completed" type="button" role="tab">
+            Completed <span class="badge rounded-pill ms-2" style="background: rgba(16, 185, 129, 0.2); color: #10b981;">{{ completed_project_data|length }}</span>
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="projectTabsContent">
+    <!-- Active Projects -->
+    <div class="tab-pane fade show active" id="active" role="tabpanel">
+        {% for item in active_project_data %}
+        <div class="project-card fade-up">
+            <div class="d-flex align-items-start justify-content-between gap-3">
+                <div style="flex:1;">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <a class="project-link" href="/projects/{{ item.project.id }}/" id="project-link-{{ item.project.id }}">
+                            📁 {{ item.project.title }}
+                        </a>
+                        <span class="role-badge role-{{ item.role|lower }}">
+                            {% if item.role == 'ADMIN' %}👑{% else %}👤{% endif %}
+                            {{ item.role }}
+                        </span>
+                    </div>
+                    {% if item.project.description %}
+                    <div class="clickable-desc" 
+                         onclick="showFullDesc('{{ item.project.title|escapejs }}', '{{ item.project.description|escapejs }}')"
+                         title="Click to see full description">
+                        <p class="mt-1 mb-0 line-clamp-2" style="color:var(--text-muted);font-size:0.875rem;line-height:1.6;">
+                            {{ item.project.description }}
+                        </p>
+                    </div>
+                    {% endif %}
+                </div>
+                <a href="/projects/{{ item.project.id }}/"
+                   style="color:var(--text-muted);font-size:1.2rem;flex-shrink:0;transition:0.2s;margin-top:2px;"
+                   onmouseover="this.style.color='#a5b4fc'"
+                   onmouseout="this.style.color='var(--text-muted)'">
+                    →
+                </a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="glass-card fade-up text-center py-5">
+            <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">📂</span>
+            <h3 style="color: var(--text-primary); font-size: 1.25rem;">No active projects</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">You're all caught up! Create a new project to get started.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Completed Projects -->
+    <div class="tab-pane fade" id="completed" role="tabpanel">
+        {% for item in completed_project_data %}
+        <div class="project-card fade-up" style="opacity: 0.8; border-color: rgba(16, 185, 129, 0.2);">
+            <div class="d-flex align-items-start justify-content-between gap-3">
+                <div style="flex:1;">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <a class="project-link" href="/projects/{{ item.project.id }}/" style="color: #10b981;">
+                            ✅ {{ item.project.title }}
+                        </a>
+                        <span class="badge rounded-pill" style="background: rgba(16, 185, 129, 0.1); color: #10b981; font-size: 0.7rem; padding: 4px 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+                            Completed
+                        </span>
+                    </div>
+                    {% if item.project.description %}
+                    <div class="clickable-desc" 
+                         onclick="showFullDesc('{{ item.project.title|escapejs }}', '{{ item.project.description|escapejs }}')">
+                        <p class="mt-1 mb-0 line-clamp-2" style="color:var(--text-muted);font-size:0.875rem;line-height:1.6;">
+                            {{ item.project.description }}
+                        </p>
+                    </div>
+                    {% endif %}
+                </div>
+                <a href="/projects/{{ item.project.id }}/" style="color: #10b981; font-size: 1.2rem;">→</a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="glass-card fade-up text-center py-5">
+            <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">🏆</span>
+            <h3 style="color: var(--text-primary); font-size: 1.25rem;">No completed projects yet</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Projects you finish will appear here for your records.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Description Modal -->
+<div class="modal fade glass-modal" id="descModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background: #0f172a !important; border: 1px solid rgba(99, 102, 241, 0.4) !important; border-radius: 20px !important;">
+            <div class="modal-header" style="border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;">
+                <h5 class="modal-title" id="descModalTitle" style="color: #ffffff !important; font-weight: 700;">Project Description</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="descModalBody" style="color: #cbd5e1 !important; line-height: 1.8 !important; font-size: 1rem !important;">
+                <!-- Content injected via JS -->
+            </div>
+            <div class="modal-footer" style="border-top: 1px solid rgba(255, 255, 255, 0.1) !important;">
+                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal" style="border-radius: 10px; font-weight: 600; background: rgba(255, 255, 255, 0.1) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; color: #ffffff !important;">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.custom-tab {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 12px !important;
+    color: var(--text-secondary) !important;
+    padding: 10px 20px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+.custom-tab:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(99, 102, 241, 0.3) !important;
+}
+.custom-tab.active {
+    background: rgba(99, 102, 241, 0.15) !important;
+    border-color: var(--accent-1) !important;
+    color: var(--text-primary) !important;
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+}
+#completed-tab.active {
+    background: rgba(16, 185, 129, 0.1) !important;
+    border-color: #10b981 !important;
+    color: #10b981 !important;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+}
+</style>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function showFullDesc(title, description) {
+        const modal = new bootstrap.Modal(document.getElementById('descModal'));
+        document.getElementById('descModalTitle').textContent = title;
+        document.getElementById('descModalBody').textContent = description;
+        modal.show();
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="section-header fade-up">
+    <div>
+        <h1 class="page-title mb-1">All Tasks</h1>
+        <p style="color:var(--text-muted);font-size:0.9rem;margin:0;">
+            {{ tasks|length }} task{{ tasks|length|pluralize }} across all projects
+        </p>
+    </div>
+    <a href="/tasks/create/" class="btn btn-primary px-4 py-2" id="tasks-new-btn">
+        ＋ New Task
+    </a>
+</div>
+
+{% if tasks %}
+
+<div class="task-table fade-up">
+    <table class="table table-borderless mb-0">
+        <thead>
+            <tr>
+                <th>Task</th>
+                <th>Project</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Assignee</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>
+                    <span style="font-weight:600;color:var(--text-primary);">{{ task.title }}</span>
+                    {% if task.due_date %}
+                    <br>
+                    <small style="color:var(--text-muted);">Due: {{ task.due_date }}</small>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="/projects/{{ task.project.id }}/"
+                       style="color:#a5b4fc;text-decoration:none;font-size:0.875rem;">
+                        📁 {{ task.project.title }}
+                    </a>
+                </td>
+                <td>
+                    <span class="badge-status badge-{{ task.status|lower }}">
+                        {% if task.status == 'COMPLETED' %}✅{% elif task.status == 'IN_PROGRESS' %}⚡{% elif task.status == 'SUBMITTED' %}📤{% else %}⏳{% endif %}
+                        {{ task.get_status_display }}
+                    </span>
+                </td>
+                <td>
+                    <span class="badge-priority badge-{{ task.priority|lower }}">
+                        {% if task.priority == 'HIGH' %}🔴{% elif task.priority == 'MEDIUM' %}🟡{% else %}🟢{% endif %}
+                        {{ task.get_priority_display }}
+                    </span>
+                </td>
+                <td style="color:var(--text-secondary);font-size:0.875rem;">
+                    {% if task.assignee %}
+                        👤 {{ task.assignee }}
+                    {% else %}
+                        <span style="color:var(--text-muted);">Unassigned</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% else %}
+
+<div class="glass-card fade-up">
+    <div class="empty-state">
+        <span class="empty-state-icon">✅</span>
+        <h3>No tasks yet</h3>
+        <p style="font-size:0.875rem;">Create a task and assign it to a project.</p>
+        <a href="/tasks/create/" class="btn btn-primary mt-3 px-5" id="tasks-empty-create-btn">
+            ＋ Create Task
+        </a>
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock %}

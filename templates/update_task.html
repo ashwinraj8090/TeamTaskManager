@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+
+        <div class="glass-card fade-up">
+
+            <div class="mb-4">
+                <a href="/projects/{{ project.id }}/"
+                   style="color:var(--text-muted);text-decoration:none;font-size:0.875rem;transition:0.2s;"
+                   onmouseover="this.style.color='#a5b4fc'"
+                   onmouseout="this.style.color='var(--text-muted)'">
+                    ← Back to {{ project.title }}
+                </a>
+            </div>
+
+            <div class="d-flex align-items-center gap-3 mb-1">
+                <h1 class="page-title" style="font-size:2rem;margin:0;">✏ Edit Task</h1>
+                <span class="badge-status badge-{{ task.status|lower }}" style="font-size:0.8rem;">
+                    {{ task.get_status_display }}
+                </span>
+            </div>
+            <p style="color:var(--text-muted);font-size:0.875rem;margin-bottom:2rem;">
+                Update task details, status, priority, or assignee.
+            </p>
+
+            <form method="POST" id="update-task-form">
+                {% csrf_token %}
+
+                {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                    <div style="color:#f87171;font-size:0.8rem;margin-top:4px;">
+                        {% for error in field.errors %}{{ error }}{% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <div class="d-flex gap-3 mt-4">
+                    <button class="btn btn-primary flex-grow-1 py-3" type="submit" id="update-task-submit"
+                            style="font-size:1rem;">
+                        Save Changes →
+                    </button>
+                    <a href="/projects/{{ project.id }}/"
+                       class="btn py-3 px-4"
+                       style="background:var(--bg-card);border:1px solid var(--border);color:var(--text-secondary);border-radius:var(--radius-sm);">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

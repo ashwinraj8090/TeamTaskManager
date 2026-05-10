@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="auth-wrapper">
+    <div class="auth-card-wide fade-up">
+
+        <!-- Logo -->
+        <div class="auth-logo">
+            <span class="auth-logo-icon">⬡</span>
+            <div class="navbar-brand" style="justify-content:center;font-size:1.05rem;">
+                Team Task Manager
+            </div>
+        </div>
+
+        <!-- Heading -->
+        <h1 class="auth-title">Create Account</h1>
+        <p class="auth-subtitle-sm">Fill in your details to get started</p>
+
+        <!-- Error Banner -->
+        {% if form.errors %}
+        <div class="auth-error-banner">
+            ⚠️ Please fix the errors below.
+        </div>
+        {% endif %}
+
+        <form method="POST" id="signup-form" novalidate>
+            {% csrf_token %}
+
+            <!-- Email -->
+            <div class="sg-field">
+                <label class="sg-label" for="id_email">Email address</label>
+                <input type="email" name="email" id="id_email"
+                    class="sg-input{% if form.email.errors %} sg-input-err{% endif %}" placeholder="you@example.com"
+                    value="{{ form.email.value|default:'' }}" autocomplete="email">
+                <span id="email-validation-msg" style="font-size: 0.8rem; margin-top: 0.35rem; display: block; font-weight: 500;"></span>
+                {% if form.email.errors %}
+                <span class="sg-err-msg">{{ form.email.errors|join:", " }}</span>
+                {% endif %}
+            </div>
+
+            <!-- Username -->
+            <div class="sg-field">
+                <label class="sg-label" for="id_username">Username</label>
+                <input type="text" name="username" id="id_username"
+                    class="sg-input{% if form.username.errors %} sg-input-err{% endif %}"
+                    placeholder="Choose a username" value="{{ form.username.value|default:'' }}"
+                    autocomplete="username">
+                <span id="username-validation-msg" style="font-size: 0.8rem; margin-top: 0.35rem; display: block; font-weight: 500;"></span>
+                {% if form.username.errors %}
+                <span class="sg-err-msg">{{ form.username.errors|join:", " }}</span>
+                {% endif %}
+                <span class="sg-help">Letters, digits and @/./+/-/_ only. Max 150 characters.</span>
+            </div>
+
+            <!-- Password -->
+            <div class="sg-field">
+                <label class="sg-label" for="id_password1">Password</label>
+                <div class="sg-eye-wrap">
+                    <input type="password" name="password1" id="id_password1"
+                        class="sg-input{% if form.password1.errors %} sg-input-err{% endif %}"
+                        placeholder="Create a strong password" autocomplete="new-password">
+                    <button type="button" class="sg-eye-btn" onclick="togglePw('id_password1',this)" tabindex="-1"
+                        aria-label="Show password">
+                        👁
+                    </button>
+                </div>
+
+                <!-- Strength bar -->
+                <div class="sg-strength-row" id="sg-strength-row" style="display:none">
+                    <div class="sg-strength-track">
+                        <div class="sg-strength-fill" id="sg-strength-fill"></div>
+                    </div>
+                    <span class="sg-strength-lbl" id="sg-strength-lbl"></span>
+                </div>
+
+                {% if form.password1.errors %}
+                <span class="sg-err-msg">{{ form.password1.errors|join:", " }}</span>
+                {% endif %}
+                <span class="sg-help">Min 8 chars · Mix uppercase, numbers &amp; symbols for a stronger password.</span>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="sg-field">
+                <label class="sg-label" for="id_password2">Confirm password</label>
+                <div class="sg-eye-wrap">
+                    <input type="password" name="password2" id="id_password2"
+                        class="sg-input{% if form.password2.errors %} sg-input-err{% endif %}"
+                        placeholder="Re-enter your password" autocomplete="new-password">
+                    <button type="button" class="sg-eye-btn" onclick="togglePw('id_password2',this)" tabindex="-1"
+                        aria-label="Show confirm password">
+                        👁
+                    </button>
+                </div>
+                {% if form.password2.errors %}
+                <span class="sg-err-msg">{{ form.password2.errors|join:", " }}</span>
+                {% endif %}
+            </div>
+
+            <!-- Submit -->
+            <button class="sg-submit-btn" type="submit" id="signup-submit-btn">
+                Create Account &nbsp;→
+            </button>
+
+            <div style="display:flex; align-items:center; margin: 1.5rem 0;">
+                <div style="flex:1; height:1px; background:var(--border);"></div>
+                <div style="padding:0 1rem; font-size:0.85rem; color:var(--text-muted);">or</div>
+                <div style="flex:1; height:1px; background:var(--border);"></div>
+            </div>
+
+            {% load socialaccount %}
+            <a href="{% provider_login_url 'google' %}" class="btn btn-secondary w-100 py-2 d-flex align-items-center justify-content-center gap-2" style="font-size:0.95rem;border-radius:12px;background:rgba(255,255,255,0.05);color:var(--text-primary);border:1px solid var(--border);text-decoration:none;transition:var(--transition);">
+                <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+                Continue with Google
+            </a>
+        </form>
+
+        <!-- Footer link -->
+        <p class="sg-footer-link">
+            Already have an account? <a href="/login/" id="signup-login-link">Sign in</a>
+        </p>
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    /* Show / Hide password */
+    function togglePw(id, btn) {
+        var inp = document.getElementById(id);
+        if (inp.type === 'password') {
+            inp.type = 'text';
+            btn.textContent = '🙈';
+        } else {
+            inp.type = 'password';
+            btn.textContent = '👁';
+        }
+    }
+
+    /* Password strength */
+    var pw1 = document.getElementById('id_password1');
+    var sRow = document.getElementById('sg-strength-row');
+    var sFill = document.getElementById('sg-strength-fill');
+    var sLbl = document.getElementById('sg-strength-lbl');
+
+    var LEVELS = [
+        { label: 'Too short', color: '#ef4444', pct: '12%' },
+        { label: 'Weak', color: '#f97316', pct: '35%' },
+        { label: 'Fair', color: '#f59e0b', pct: '60%' },
+        { label: 'Good', color: '#22c55e', pct: '80%' },
+        { label: 'Strong', color: '#10b981', pct: '100%' },
+    ];
+
+    function strength(pw) {
+        if (pw.length === 0) return -1;
+        let score = 0;
+        
+        if (pw.length >= 8) score++;
+        if (pw.length >= 12) score++;
+        
+        if (/[A-Z]/.test(pw)) score++;
+        if (/[a-z]/.test(pw)) score++;
+        if (/[0-9]/.test(pw)) score++;
+        if (/[^A-Za-z0-9]/.test(pw)) score++;
+
+        if (pw.length < 8) return 0;
+        if (score <= 3) return 1;
+        if (score === 4) return 2;
+        if (score === 5) return 3;
+        return 4;
+    }
+
+    if (pw1) {
+        pw1.addEventListener('input', function () {
+            if (!pw1.value) { sRow.style.display = 'none'; return; }
+            sRow.style.display = 'flex';
+            var lvl = LEVELS[strength(pw1.value)];
+            sFill.style.width = lvl.pct;
+            sFill.style.background = lvl.color;
+            sLbl.textContent = lvl.label;
+            sLbl.style.color = lvl.color;
+        });
+    }
+    /* Live Validation */
+    const emailInput = document.getElementById('id_email');
+    const emailMsg = document.getElementById('email-validation-msg');
+    let emailTimeout = null;
+
+    emailInput.addEventListener('input', function() {
+        clearTimeout(emailTimeout);
+        emailMsg.textContent = '';
+        if (this.value.includes('@')) {
+            emailTimeout = setTimeout(() => {
+                fetch(`/accounts/validate-email/?email=${encodeURIComponent(this.value)}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.is_taken) {
+                        emailMsg.textContent = 'This email is already registered';
+                        emailMsg.style.color = '#ef4444';
+                    } else {
+                        emailMsg.textContent = '✓ Email available';
+                        emailMsg.style.color = '#10b981';
+                    }
+                });
+            }, 500);
+        }
+    });
+
+    const usernameInput = document.getElementById('id_username');
+    const usernameMsg = document.getElementById('username-validation-msg');
+    let usernameTimeout = null;
+
+    usernameInput.addEventListener('input', function() {
+        clearTimeout(usernameTimeout);
+        usernameMsg.textContent = '';
+        if (this.value.length > 2) {
+            usernameTimeout = setTimeout(() => {
+                fetch(`/accounts/validate-username/?username=${encodeURIComponent(this.value)}`)
+                .then(r => r.json())
+                .then(data => {
+                    if (data.is_taken) {
+                        usernameMsg.textContent = 'This username is taken';
+                        usernameMsg.style.color = '#ef4444';
+                    } else {
+                        usernameMsg.textContent = '✓ Username available';
+                        usernameMsg.style.color = '#10b981';
+                    }
+                });
+            }, 500);
+        }
+    });
+</script>
+{% endblock %}

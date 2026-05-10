@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Profile Header Card -->
+            <div class="card mb-4" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden;">
+                <div style="height: 120px; background: linear-gradient(135deg, #4f46e5, #6366f1); position: relative;"></div>
+                <div class="card-body pt-0 px-4 pb-4" style="position: relative;">
+                    <div class="d-flex align-items-end" style="margin-top: -50px; margin-bottom: 20px;">
+                        <div style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--bg-card); background: var(--bg-card); overflow: hidden; box-shadow: var(--shadow-lg);">
+                            {% if user.profile.avatar %}
+                                <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            {% else %}
+                                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #6366f1, #a5b4fc); color: white; font-size: 2rem; font-weight: 800;">
+                                    {{ user.email|slice:":1"|upper }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="ms-3 mb-2">
+                            <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary); margin: 0;">{{ user.username }}</h2>
+                            <p style="font-size: 0.875rem; color: var(--text-muted); margin: 0;">Joined on {{ user.date_joined|date:"F Y" }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Stats -->
+            <h4 class="mb-4" style="font-weight: 700; color: var(--text-primary);">Activity Overview</h4>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="card p-3" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); text-align: center;">
+                        <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.5rem;">Total Projects</div>
+                        <div style="font-size: 2rem; font-weight: 800; color: #a5b4fc;">{{ total_projects }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card p-3" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); text-align: center;">
+                        <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.5rem;">Completed Tasks</div>
+                        <div style="font-size: 2rem; font-weight: 800; color: #10b981;">{{ completed_tasks }}</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card p-3" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); text-align: center;">
+                        <div style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.5rem;">Pending Tasks</div>
+                        <div style="font-size: 2rem; font-weight: 800; color: #f59e0b;">{{ pending_tasks }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

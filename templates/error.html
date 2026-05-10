@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="glass-card fade-up text-center">
+            <span style="font-size:4rem;display:block;margin-bottom:1rem;">⚠️</span>
+            <h1 style="font-size:1.5rem;font-weight:700;color:var(--text-primary);margin-bottom:0.75rem;">
+                Access Denied
+            </h1>
+            <p style="color:var(--text-secondary);margin-bottom:2rem;">
+                {{ message }}
+            </p>
+            <a href="/dashboard/" class="btn btn-primary px-5" id="error-back-btn">
+                ← Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

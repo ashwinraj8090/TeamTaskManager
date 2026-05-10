@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-7 col-lg-6">
+
+        <div class="glass-card fade-up">
+
+            <div class="mb-4">
+                <a href="/projects/"
+                   style="color:var(--text-muted);text-decoration:none;font-size:0.875rem;transition:0.2s;"
+                   onmouseover="this.style.color='#a5b4fc'" onmouseout="this.style.color='var(--text-muted)'">
+                    ← Back to Projects
+                </a>
+            </div>
+
+            <h1 class="page-title" style="font-size:2rem;">
+                📁 Create Project
+            </h1>
+            <p style="color:var(--text-muted);font-size:0.875rem;margin-bottom:2rem;">
+                Set up a new project and start organizing your work.
+            </p>
+
+            <form method="POST" id="create-project-form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="btn btn-primary w-100 py-3 mt-3" type="submit" id="create-project-submit"
+                        style="font-size:1rem;">
+                    Create Project →
+                </button>
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,11 @@
+django
+django-allauth
+django-axes
+django-rest-framework
+pillow
+python-decouple
+dj-database-url
+gunicorn
+whitenoise
+psycopg2-binary
+django-cors-headers
