@@ -122,7 +122,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
-    BASE_DIR / 'templates' / 'static',
 ]
 
 # WhiteNoise configuration
